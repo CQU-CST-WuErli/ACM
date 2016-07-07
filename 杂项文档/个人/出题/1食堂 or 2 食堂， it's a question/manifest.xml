@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<problem>
+	<title><![CDATA[1食堂 or 2 食堂， it's a question]]></title>
+	<author><![CDATA[li924579]]></author>
+	<content><![CDATA[content.html]]></content>
+	<site>scu</site>
+	<id2></id2>
+	<validator>standard</validator>
+	<testcase>
+		<cpu>2000</cpu>
+		<memory>65536</memory>
+		<input><![CDATA[input.txt]]></input>
+		<output><![CDATA[output.txt]]></output>
+	</testcase>
+</problem>

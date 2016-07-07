@@ -1,0 +1,33 @@
+vector<int>
+struct Edge
+{
+	int to ,cost
+}
+
+vector<Edge> G[maxV]
+
+int x,y,cost;
+G[x].push_back((Edge){y,cost});
+
+
+
+邻接表
+int u;
+for (int i=0;i<G.size();++i)
+{
+	Edge &e=G[u][i];
+}
+
+链式前向星
+memset(head,-1,sizeof head);
+int cost[maxn],pnt[maxn],pre[maxn],head[maxn];
+int cnt=0;
+
+coid add_edge(int u,int v,int c){
+	pnt[cnt]=v;cost[cnt]=c;pre[cnt]=head[u];head[u]=cnt++;
+}
+for (int i=head[u];i!=-1;i=pre[i])
+{
+	int v=pnt[i];
+}
+取反向边   i^1

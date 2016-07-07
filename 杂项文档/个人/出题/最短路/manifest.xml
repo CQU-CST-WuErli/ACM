@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<problem>
+	<title><![CDATA[最短路]]></title>
+	<author><![CDATA[li924579]]></author>
+	<content><![CDATA[content.html]]></content>
+	<site>scu</site>
+	<id2></id2>
+	<validator>standard</validator>
+	<testcase>
+		<cpu>1500</cpu>
+		<memory>32768</memory>
+		<input><![CDATA[input.txt]]></input>
+		<output><![CDATA[output.txt]]></output>
+	</testcase>
+</problem>

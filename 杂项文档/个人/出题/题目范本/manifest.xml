@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="GBK"?>
+
+<problem>
+	<title><![CDATA[题目名]]></title>
+	<author><![CDATA[出题人名]]></author>
+	<content><![CDATA[content.html]]></content>
+	<site>scu</site>
+	<id2></id2>
+	<validator>standard</validator>
+	<testcase>
+		<cpu>1000</cpu>
+		<memory>32768</memory>
+		<input><![CDATA[input.txt]]></input>
+		<output><![CDATA[output.txt]]></output>
+	</testcase>
+</problem>
