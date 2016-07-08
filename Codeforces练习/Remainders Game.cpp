@@ -33,14 +33,31 @@ const double pi=acos(-1);
 typedef long long  ll;
 using namespace std;
 
+ll n, k;
+ll c[1000100];
 
+ll gcd(ll a, ll v) {
+	return __gcd(a, v);
+}
+
+ll lcm(ll a, ll b) {
+	return a * b / gcd(a, b);
+}
 
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
     freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
     // freopen("C:\\Users\\john\\Desktop\\out.txt","w",stdout);
 #endif
-
+    while(cin >> n >> k) {
+        for (int i = 1; i <= n; i++)
+        	scanf("%I64d", c + i);
+       ll tmp = 1;
+        for (int i = 1; i <= n; i++) {
+        	tmp = gcd(k, lcm(tmp, c[i]));
+        }
+        puts(tmp == k ? "Yes" : "No");
+    }
 	return 0;
 }
 /*
