@@ -82,6 +82,8 @@ int query(int l, int r) {
 	return -1;
 }
 
+
+
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
 	freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
