@@ -37,12 +37,12 @@ int n, k;
 char mp[555][555];
 int vis[555][555];
 int size[555 * 555];
+int tid[555 * 555];
 int cnt;
 int dir[4][2] = {1, 0, 0, 1, -1, 0, 0, -1};
 int sum;
 
 void dfs(int x, int y) {
-	// cout << x << ' ' << y << endl;
 	vis[x][y] = cnt;
 	sum++;
 	for (int i = 0; i < 4; i++) {
@@ -50,6 +50,14 @@ void dfs(int x, int y) {
 		if (tx < 1 || ty < 1 || tx > n || ty > n || mp[tx][ty] == 'X' || vis[tx][ty]) continue;
 		dfs(tx, ty);
 	}
+}
+
+void add(int x, int y, int ti, int& ans) {
+    if (x < 1 || x > n || y < 1 || y > n || mp[x][y] == 'X') return;
+    if (tid[vis[x][y]] != ti) {
+        ans += size[vis[x][y]];
+        tid[vis[x][y]] = ti;
+    }
 }
 
 int main(int argc, char const *argv[]) {
@@ -62,6 +70,8 @@ int main(int argc, char const *argv[]) {
         	scanf("%s", mp[i] + 1);
         CLR(vis);
         CLR(size);
+        CLR(tid);
+        int ti = 1;
         cnt = 0;
         for (int i = 1; i <= n; i++) {
         	for (int j = 1; j <= n; j++) if (mp[i][j] == '.' && !vis[i][j]) {
@@ -71,9 +81,39 @@ int main(int argc, char const *argv[]) {
         		size[cnt] = sum;
         	}
         }
-        for (int i = 1; i <= n - k + 1; i++) {
-
+        int ans = 0;
+        for (int y = 1; y + k - 1<= n; y++) {
+            for (int x = 1; x <= k; x++) {
+                for (int i = 0; i < k; i++) {
+                    size[vis[x][y + i]]--;
+                }
+            }
+            for (int x = 1; x + k - 1<= n; x++) {
+                int tmp = k * k;
+                for (int i = x; i < x + k; i++) {
+                    add(i, y - 1, ti, tmp);
+                    add(i, y + k, ti, tmp);
+                }
+                for (int i = y; i < y + k; i++) {
+                    add(x - 1, i, ti, tmp);
+                    add(x + k, i, ti, tmp);
+                }
+                ti++;
+                ans = max(tmp, ans);
+                if (x + k <= n) {
+                    for (int i = y; i < y + k; i++) {
+                        size[vis[x][i]]++;
+                        size[vis[x + k][i]]--;
+                    }
+                }
+            }
+            for (int i = n - k + 1; i <= n; i++) {
+                for (int j = y; j < y + k; j++) {
+                    size[vis[i][j]]++;
+                }
+            }
         }
+        cout << ans << endl;
     }
 	return 0;
 }
