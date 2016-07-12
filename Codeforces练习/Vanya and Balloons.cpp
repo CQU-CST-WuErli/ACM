@@ -241,7 +241,7 @@ int main(int argc, char const *argv[]) {
     		}
     		tmp = tmp * (a[x][y] - '0') % MOD;
     	}
-    	printf("%I64d\n", tmp);
+    	cout << tmp << endl;
     }
 	return 0;
 }
