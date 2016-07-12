@@ -111,7 +111,7 @@ int main(int argc, char const *argv[]) {
         	}
         	else bfs(i);
         }
-        cout << dp[tx][ty] << endl;
+        printf("%d\n", dp[tx][ty]);
     }
 	return 0;
 }
