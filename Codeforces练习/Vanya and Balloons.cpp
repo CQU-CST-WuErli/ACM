@@ -161,16 +161,6 @@ void gao() {
 	}
 }
 
-template <typename T>
-void print(T a[][N]) {
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			cout << a[i][j] << ' ';
-		}
-		cout << endl;
-	}
-}
-
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
     freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
@@ -189,7 +179,6 @@ int main(int argc, char const *argv[]) {
     		}
     	}
     	gao();
-    	// print(RD);
     	double ans = -1;
     	pair<int, int> pos;
     	int flag = 0;
@@ -206,7 +195,6 @@ int main(int argc, char const *argv[]) {
     			if (tmp > ans) {
     				ans = tmp;
     				pos = make_pair(i, j);
-    				// cout << i << ' ' << j << ' ' << len << ' ' << tmp << endl;
     				flag = 1;
     				Len = len;
     			}
@@ -223,16 +211,12 @@ int main(int argc, char const *argv[]) {
     			tmp -= 3 * logs[i][j];
     			if (tmp > ans) {
     				ans = tmp;
-    				// cout << i << ' ' << j << ' ' << len << ' ' << tmp << endl;
     				pos = make_pair(i, j);
     				flag = 2;
     				Len = len;
     			}
     		}
     	}
-    	// cout << pos.first << ' ' << pos.second << endl;
-    	// cout << flag << endl;
-    	// cout << Len << endl;
     	if (ans == -1) {
     		cout << 0 << endl;
     		continue;
