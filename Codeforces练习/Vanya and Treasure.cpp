@@ -58,8 +58,7 @@ void bfs(int c) {
 	OFF(d);
 	vector<P> vc, q;
 	for (auto& it : g[c - 1]) {
-		vc.push_back(P(it.first, it.second, dp[it.first][it.second]));
-	}
+		vc.push_back(P(it.first, it.second, dp[it.first][it.second]));	}
 	sort(vc.begin(), vc.end());
 	int cnt = 0, tmp = 1;
 	q.push_back(vc[0]);

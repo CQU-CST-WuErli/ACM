@@ -68,8 +68,7 @@ int main(int argc, char const *argv[]) {
         	ans *= gao(s[i]);
         	ans %= MOD;
         }
-
-        cout << ans << endl;
+        printf("%I64d\n", ans);
     }
 	return 0;
 }
