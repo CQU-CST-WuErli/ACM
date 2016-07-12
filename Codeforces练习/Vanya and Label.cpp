@@ -68,7 +68,7 @@ int main(int argc, char const *argv[]) {
         	ans *= gao(s[i]);
         	ans %= MOD;
         }
-        // puts("");
+
         cout << ans << endl;
     }
 	return 0;
