@@ -118,6 +118,26 @@ double PolygonArea(Point* p,int n) {
 		area+=Cross(p[i]-p[0],p[i+1]-p[0]);
 	return area/2.0;
 }
+// 凸包
+// 输入点p，个数n，输出ch
+// 点不能重复
+// 原来点的顺序会被破坏
+// 有精度要求用dcmp比较
+int ConvexHull(Point *p,int n,Point* ch) {
+	sort(p + 1, p + 1 + n);
+	int m = 1;
+	for (int i = 1; i <= n; i++) {
+		while(m > 2 && Cross(ch[m - 1] - ch[m - 2], p[i] - ch[m - 2]) <= 0) m--;
+		ch[m++] = p[i];
+	}
+	int k=m;
+	for (int i = n - 1;i >= 1; i--) {
+		while (m > k && Cross(ch[m - 1] - ch[m - 2], p[i] - ch[m - 2]) <= 0) m--;
+		ch[m++] = p[i];
+	}
+	if (n > 1) m--;
+	return m;
+}
 // 直线
 struct Line {
   Point p;
@@ -262,26 +282,7 @@ int isPointInPolygon(Point& p,vector<Point>& poly) {
 	if (wn!=0) return 1;
 	return 0;
 }
-// 凸包
-// 输入点p，个数n，输出ch
-// 点不能重复
-// 原来点的顺序会被破坏
-// 有精度要求用dcmp比较
-int ConvexHull(Point *p,int n,Point* ch) {
-	sort(p,p+n);
-	int m=0;
-	for (int i=0;i<n;i++) {
-		while(m>1 && Cross(ch[m-1]-ch[m-2],p[i]-ch[m-2])<=0) m--;
-		ch[m++]=p[i];
-	}
-	int k=m;
-	for (int i = n - 2;i >= 0; i--) {
-		while (m > k && Cross(ch[m - 1] - ch[m - 2], p[i] - ch[m - 2]) <= 0) m--;
-		ch[m++] = p[i];
-	}
-	if (n > 1) m--;
-	return m;
-}
+
 // 角度转弧度
 double torad(double deg) {
 	return deg/180*acos(-1);

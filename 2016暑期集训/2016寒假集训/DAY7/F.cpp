@@ -43,63 +43,45 @@ const double pi=acos(-1);
 typedef long long  ll;
 using namespace std;
 
-const int N=1e5+100;
-const int M=200;
+const int N=(2e5+100);
+const int M=(2e6+100);
 
-int n,m,k;
-int havekind[M],have[M][M];
-int needkind[M],need[M][M];
-
-int pnt[N],head[M],nxt[N],cap[N],cost[N],pre[N];
+int pnt[M],nxt[M],head[N],cost[M];
 int cnt;
 
-void add_edge(int u,int v,int f,int w) {
-	pnt[cnt]=v;pre[cnt]=u;nxt[cnt]=head[u];head[u]=cnt;
-	cap[cnt]=f;cost[cnt++]=w;
+void add_edge(int u,int v,int w) {
+	pnt[cnt]=v;nxt[cnt]=head[u];head[u]=cnt;cost[cnt++]=w;
 }
 
-int a[M],p[M],vis[M];
-ll d[M];
+int n,m,c;
+int lay[N];
+int has[N];
 
-bool spfa(int s,int t,int &Flow,ll& Cost) {
-	CLR(a);CLR(vis);
-	rep(i,s,t) d[i]=INF_INT;
+int vis[N];
+int dis[N];
+
+int spfa() {
+	CLR(vis);
+	MEM(dis,INF_INT);
+	dis[1]=0;
+	vis[1]=1;
 	queue<int> q;
-	vis[s]=1;
-	a[s]=INF_INT;
-	d[s]=0;
-	q.push(s);
-	while (q.size()) {
+	q.push(1);
+	while (!q.empty()) {
 		int x=q.front();q.pop();
 		vis[x]=0;
 		for (int i=head[x];~i;i=nxt[i]) {
 			int v=pnt[i];
-			if (d[v]>d[x]+cost[i] && cap[i]) {
-				d[v]=d[x]+cost[i];
-				p[v]=i;
-				a[v]=min(a[x],cap[i]);
+			if (dis[v]>dis[x]+cost[i]) {
+				dis[v]=dis[x]+cost[i];
 				if (!vis[v]) {
-					q.push(v);
 					vis[v]=1;
+					q.push(v);
 				}
 			}
 		}
 	}
-	if (d[t]>=INF_INT) return false;
-	Flow+=a[t];
-	Cost+=a[t]*d[t];
-	for (int u=t;u!=s;u=pre[p[u]]) {
-		cap[p[u]]-=a[t];
-		cap[p[u]^1]+=a[t];
-	}
-	return true;
-}
-
-ll MCMF(int s,int t) {
-	int Flow=0;
-	ll Cost=0;
-	while (spfa(s,t,Flow,Cost));
-	return Cost;
+	return dis[n];
 }
 
 int main(){
@@ -107,41 +89,34 @@ int main(){
 	freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
 //	freopen("C:\\Users\\john\\Desktop\\out.txt","w",stdout);
 #endif
-	while (SIII(n,m,k)==3 && !(!n && !m && !k)) {
-		CLR(havekind);CLR(needkind);
-		rep(i,1,n) rep(j,1,k) {
-			SI(need[i][j]);
-			needkind[j]+=need[i][j];
+	for (int T_T,kase=SI(T_T);kase<=T_T;kase++) {
+		OFF(head);cnt=0;
+		SIII(n,m,c);
+		CLR(has);
+		rep(i,1,n) {
+			SI(lay[i]);
+			lay[i]+=n;
+			has[lay[i]]=1;
 		}
-		rep(i,1,m) rep(j,1,k) {
-			SI(have[i][j]);
-			havekind[j]+=have[i][j];
+		rep(i,n+1,n+n-1) {
+			if (has[i] && has[i+1]) {
+				add_edge(i,i+1,c);
+				add_edge(i+1,i,c);
+			}
 		}
-		int flag=1;
-		rep(i,1,k) if (needkind[i]>havekind[i]) flag=0;
-		int source=0,sink=m+n+1;
-		ll ans=0;
-		rep(z,1,k) {
-			OFF(head);cnt=0;
-			rep(i,1,n) rep(j,1,m) {
-				int x;SI(x);
-				add_edge(j,i+m,INF_INT,x);
-				add_edge(i+m,j,0,-x);
-			}
-			if (!flag) continue;
-			rep(i,1,m) {
-				add_edge(source,i,have[i][z],0);
-				add_edge(i,source,0,0);
-			}
-			rep(i,1,n) {
-				add_edge(i+m,sink,need[i][z],0);
-				add_edge(sink,i+m,0,0);
-			}
-			ans+=MCMF(source,sink);
+		rep(i,1,n) {
+			add_edge(lay[i],i,0);
+			if (lay[i]>n+1 && has[lay[i]-1]) add_edge(i,lay[i]-1,c);
+			if (lay[i]<n+n && has[lay[i]+1]) add_edge(i,lay[i]+1,c);
 		}
-		if (!flag) cout << -1 << endl;
-		else cout << ans << endl;
+		while (m--) {
+			int u,v,w;
+			SIII(u,v,w);
+			add_edge(u,v,w);
+			add_edge(v,u,w);
+		}
+		int ans=spfa();
+		printf("Case #%d: %d\n",kase,ans>=INF_INT?-1:ans);
 	}
 	return 0;
 }
-
