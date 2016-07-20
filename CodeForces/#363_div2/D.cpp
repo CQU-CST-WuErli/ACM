@@ -37,7 +37,6 @@ using namespace std;
 int n;
 int p[200020];
 int par[200020];
-vector<int> g[200020];
 int find(int x) {
 	if (x == par[x]) return par[x];
 	else return par[x] = find(par[x]);
@@ -61,12 +60,13 @@ int main(int argc, char const *argv[]) {
     		else {
     			int fa = find(i), fb = find(p[i]);
     			if (fa == fb) p[i] = i, ans++;
-    			else par[fa] = par[fb];
+    			else par[fa] = fb;
     		}
     	}
     	if (root == 0) {
     		for (int i = 1; i <= n; i++)
-    			if (p[i] == i) root = i, ans++;
+    			if (p[i] == i) root = i;
+    		ans++;
     	}
     	cout << ans - 1 << endl;
     	for (int i = 1; i <= n; i++) {
