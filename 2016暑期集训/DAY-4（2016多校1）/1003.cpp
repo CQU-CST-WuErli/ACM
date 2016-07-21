@@ -36,30 +36,25 @@ using namespace std;
 
 int n, m;
 char mp[1100][1100];
-vector<pair<int, int> > vc;
+int sumx[1010], sumy[1010];
+int posx[1010], posy[1010];
+ll ans;
 
-ll all(ll x) {
-	return x * (x + 1) / 2;
+ll cal(int n, int m, int pos[]) {
+    ll sum1 = 0, sum2 = 0;
+    for (int i = 1; i <= n; i++) {
+        if (pos[i] > pos[i - 1]) sum1 += pos[i] - 1;
+        else if (pos[i] == 0) sum1 = 0;
+        else sum1 = pos[i] - 1;
+        ans += 1LL * sum1 * 4 * (m - pos[i]);
+        if (pos[i] > pos[i - 1]) sum2 = 0;
+        if (pos[i] != 0) ans += 1LL * sum2 * 4 * (pos[i] - 1);
+        if (pos[i - 1] > pos[i]) sum2 += m - pos[i];
+        else if (pos[i] == m) sum2 = 0;
+        else sum2 = m - pos[i];
+    }
 }
 
-ll gao(int i, int j) {
-	ll ret = 0;
-	ll l = j - 1, r = m - j;
-	ret += n * (all(l) + all(r));
-	ll u = i - 1, d = n - i;
-	ret += m * (all(u) + all(d));
-	return ret;
-}
-
-ll cal(int n, int m) {
-	ll ret = 0;
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= m; j++) {
-			ret += gao(i, j);
-		}
-	}
-	return ret;
-}
 
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
@@ -68,54 +63,33 @@ int main(int argc, char const *argv[]) {
 #endif
     int t; SI(t);
     while (t--) {
-    	vc.clear();
     	SII(n, m);
+        ll tot = 0;
+        CLR(sumx); CLR(sumy);
+        CLR(posx); CLR(posy);
     	for (int i = 1; i <= n; i++) {
     		scanf("%s", mp[i] + 1);
     		for (int j = 1; j <= m; j++) {
-    			// cout << mp[i][j] << ' ';
-    			if (mp[i][j] == 'G') vc.push_back(make_pair(i, j));
-    		}
-    		// cout << endl;
-    	}
-    	ll sum = cal(n, m);
-    	// lookln(sum);
-    	for (auto& it : vc) {
-    		int x = it.first, y = it.second;
-    		sum -= 2.0 * gao(x, y);
-    	}
-    	if (vc.size() > 1) {
-    		for (int i = 0;i < vc.size(); i++) {
-    			for (int j = i + 1; j < vc.size(); j++) {
-    				int dis = vc[i].first - vc[j].first + vc[i].second - vc[j].second;
-    				sum += 2.0 * dis;
-    			}
+                if (mp[i][j] == 'G') posx[i] = j, posy[j] = i;
+                else if (mp[i][j] == '#') sumx[i]++, sumy[j]++, tot++;
     		}
     	}
-    	// lookln(sum);
-    	ll ret = 0;
-    	for (auto& it : vc) {
-    		int x = it.first, y = it.second;
-    		ll tmp = 0;
-    		int st = 2, ed = x;
-    		for (int i = x + 1; i <= n; i++) {
-    			tmp += (st + ed) * (x - 1) / 2;
-    			st++; ed++;
-    		}
-    		ret += tmp * 2;
-    		tmp = 0, st = 2, ed = y;
-    		for (int i = y + 1; i <= m; i++) {
-    			tmp += (st + ed) * (y - 1) / 2;
-    			st++; ed++;
-    		}
-    		ret += tmp * 2.0;
-    		sum += ((ll)(x- 1) * (ll)(n - x) + (ll)(y - 1) * (ll)(m - y)) * 2.0;
-    	}
-    	sum -= ret;
-    	// lookln(sum);
-    	ll num = (double)(n * m - vc.size());
-    	double ans = (double)sum / (double)(num * num);
-    	printf("%.4f\n", ans);
+        ans = 0;
+        for (int i = 1; i <= n; i++) {
+            for (int j = 1; j <= n; j++) {
+                ans += 1LL * abs(j - i) * sumx[i] * sumx[j];
+            }
+        }
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= m; j++) {
+                ans += 1LL * abs(j - i) * sumy[i] * sumy[j];
+            }
+        }
+        cal(n, m, posx);
+        cal(m, n, posy);
+        tot *= tot;
+        double d = 1.0 * ans / tot;
+        printf("%.4f\n", d);
     }
 	return 0;
 }
