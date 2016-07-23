@@ -34,57 +34,47 @@ const double pi=acos(-1);
 typedef long long  ll;
 using namespace std;
 
-const int N = 200020;
-int n, k;
-vector<int> g[N];
-int w[N];
-int mx[N];
-int sz[N];
-int centroid;
+const int N = 1000010;
 
-void find(int fa, int u) {
-	mx[u] = 0; sz[u] = w[u];
-	for (auto & v: g[u]) {
-		if (v == fa) continue;
-		find(u, v);
-		sz[u] += sz[v];
-		mx[u] = max(mx[u], sz[v]);
-	}
-	mx[u] = max(mx[u], 2 * k - sz[u]);
-	if (!centroid || mx[u] < mx[centroid]) centroid = u;
-}
-
-ll sum = 0;
-void dfs(int fa, int u, int cnt) {
-	if (w[u]) sum += cnt;
-	for (auto& v : g[u]) {
-		if (fa == v) continue;
-		dfs(u, v, cnt + 1);
-	}
-}
+struct P {
+    int mod, pos;
+    bool operator < (const P& rhs) const {
+    	if (mod == rhs.mod) return pos < rhs.pos;
+    	return mod < rhs.mod;
+    }
+}p[N];
+ll sum[N];
+int n, pp, k;
+int pre[N];
 
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
     freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
     // freopen("C:\\Users\\john\\Desktop\\out.txt","w",stdout);
 #endif
-    SII(n, k);
-    CLR(w);
-    for (int i = 1; i <= 2 * k; i++) {
-		int x; SI(x);
-		w[x] = 1;
+    for (int T_T, kase = SI(T_T); kase <= T_T; kase++) {
+    	SIII(n, pp, k);
+        for (int i = 1; i <= n; i++) {
+        	SI(sum[i]);
+            sum[i] +=  sum[i-1];
+            p[i].pos = i;
+            p[i].mod = sum[i] % pp;
+        }
+        sort(p + 1, p + 1 + n);
+        deque<P> q;
+	    for (int i = 1; i <= n; i++) {
+    	    if (!q.size()) pre[p[i].pos] = -1;
+	        else pre[p[i].pos] = q.front().pos;
+	        while (q.size() &&  p[i].pos < q.back().pos)  q.pop_back();
+	        q.push_back(p[i]);
+        	while (q.size() && p[i + 1].mod - q.front().mod > k) q.pop_front();
+    	}
+    	ll ans = - 1;
+	    for (int i = 1; i <= n; ++i) {
+    	    if (sum[i] % pp <= k) ans = max(ans,sum[i] / pp);
+	        if (pre[i] == -1 || pre[i] >= i) continue;
+       		ans = max(ans,(sum[i] - sum[pre[i]]) / pp);
+    	}
+    	printf("Case %d: %lld\n", kase, ans);
     }
-    for (int i = 1; i < n; i++) {
-    	int u, v;
-    	SII(u, v);
-    	g[u].push_back(v);
-    	g[v].push_back(u);
-    }
-    centroid = 0;
-    find(-1, 1);
-    // lookln(centroid);
-    sum = 0;
-    dfs(-1, centroid, 0);
-	cout << sum << endl;
-	return 0;
 }
