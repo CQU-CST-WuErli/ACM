@@ -34,41 +34,61 @@ const double pi=acos(-1);
 typedef long long  ll;
 using namespace std;
 
-const int N = 1010;
+const int N = 10010;
 
-int n;
-bitset<N> bit[N];
+int n, m;
+vector<int> g[N];
+int num[N][2];
+int vis[N];
+int cnt0, cnt1;
+
+void dfs(int u, int cnt) {
+	vis[u] = cnt;
+	if (vis[u] == 1) cnt0++;
+	else cnt1++;
+	for (auto& v : g[u]) {
+		if (!vis[v]) dfs(v, -cnt);
+	}
+}
 
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
     freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
     // freopen("C:\\Users\\john\\Desktop\\out.txt","w",stdout);
 #endif
-    for (int T_T, kase = SI(T_T); kase <= T_T; kase++) {
-    	SI(n);
+    int t; SI(t);
+    while (t--) {
+    	SII(n, m);
     	for (int i = 1; i <= n; i++)
-    		bit[i].reset();
-    	for (int i = 1; i <= n; i++) {
-    		int x; SI(x);
-    		bit[i].set(i);
-    		while (x--) {
-    			int pos; SI(pos);
-    			bit[i].set(pos);
+    		g[i].clear();
+    	for (int i = 1; i <= m; i++) {
+    		int u, v; SII(u, v);
+    		g[u].push_back(v);
+    		g[v].push_back(u);
+    	}
+    	CLR(vis);
+    	int cnt = 0;
+    	for (int i = 1; i <= n; i++) if (!vis[i]) {
+    		cnt0 = cnt1 = 0;
+    		dfs(i, 1);
+    		num[++cnt][0] = cnt0;
+    		num[cnt][1] = cnt1;
+    	}
+    	// lookln(cnt);
+    	bitset<N> dp;
+    	dp.set(0);
+    	for (int i = 1; i <= cnt; i++) {
+    		dp = (dp << num[i][0]) | (dp << num[i][1]);
+    	}
+    	ll ans = 0;
+    	for (int i = n / 2; i >= 1; i--) {
+    		if (dp.test(i)) {
+    			ans = i;
+    			break;
     		}
     	}
-    	for (int i = 1; i <= n; i++) {
-    		for (int j = 1; j <= n; j++) if (bit[j][i]) {
-    			bit[j] |= bit[i];
-    		}
-    	}
-    	double ans = 0.0;
-    	for (int i = 1; i <= n; i++) {
-    		double tmp = 0.0;
-    		for (int j = 1; j <= n; j++) if (bit[j][i])
-    			tmp += 1.0;
-    		ans += 1.0 / tmp;
-    	}
-    	printf("Case #%d: %.5f\n", kase, ans);
+    	ans = (n - ans) * ans - m;
+    	printf("%lld\n", ans);
     }
 	return 0;
 }

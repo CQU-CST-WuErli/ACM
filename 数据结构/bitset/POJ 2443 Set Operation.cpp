@@ -34,41 +34,36 @@ const double pi=acos(-1);
 typedef long long  ll;
 using namespace std;
 
-const int N = 1010;
-
 int n;
-bitset<N> bit[N];
+bitset<10010> bit[1010];
 
 int main(int argc, char const *argv[]) {
 #ifdef LOCAL
     freopen("C:\\Users\\john\\Desktop\\in.txt","r",stdin);
     // freopen("C:\\Users\\john\\Desktop\\out.txt","w",stdout);
 #endif
-    for (int T_T, kase = SI(T_T); kase <= T_T; kase++) {
-    	SI(n);
+    while (SI(n) == 1) {
     	for (int i = 1; i <= n; i++)
     		bit[i].reset();
     	for (int i = 1; i <= n; i++) {
-    		int x; SI(x);
-    		bit[i].set(i);
-    		while (x--) {
-    			int pos; SI(pos);
-    			bit[i].set(pos);
+    		int k; SI(k);
+    		while (k--) {
+    			int x; SI(x);
+    			bit[i].set(x);
     		}
     	}
-    	for (int i = 1; i <= n; i++) {
-    		for (int j = 1; j <= n; j++) if (bit[j][i]) {
-    			bit[j] |= bit[i];
+    	int q; SI(q);
+    	int l, r;
+    	while (q--) {
+    		SII(l, r);
+    		int flag = 0;
+    		for (int i = 1; i <= n; i++) {
+    			if (bit[i].test(l) && bit[i].test(r)) {
+    				flag = 1; break;
+    			}
     		}
+    		puts(flag ? "Yes" : "No");
     	}
-    	double ans = 0.0;
-    	for (int i = 1; i <= n; i++) {
-    		double tmp = 0.0;
-    		for (int j = 1; j <= n; j++) if (bit[j][i])
-    			tmp += 1.0;
-    		ans += 1.0 / tmp;
-    	}
-    	printf("Case #%d: %.5f\n", kase, ans);
     }
 	return 0;
 }
