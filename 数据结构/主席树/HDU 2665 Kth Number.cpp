@@ -37,16 +37,46 @@ using namespace std;
 const int N = 100010;
 
 int root[N];
-int ls[N * 20], rs[N * 20];
-int sum[N * 20];
+int ls[N * 30], rs[N * 30];
+int sum[N * 30];
 int a[N];
 int Hash[N];
 int n, q;
 int tot;
 int len;
 
-void build(int & rt, int l, int r) {
+int build(int l, int r) {
+	int rt = ++tot;
+	sum[rt] = 0;
+	if (l == r) return rt;
+	int mid = l + r >> 1;
+	ls[rt] = build(l, mid);
+	rs[rt] = build(mid + 1, r);
+	return rt;
+}
 
+int update(int last, int pos, int l, int r) {
+	int rt = ++tot;
+	sum[rt] = sum[last] + 1;
+	if (l == r) return rt;
+	int mid = l + r >> 1;
+	if (pos <= mid) {
+		ls[rt] = update(ls[last], pos, l, mid);
+		rs[rt] = rs[last];
+	}
+	else {
+		ls[rt] = ls[last];
+		rs[rt] = update(rs[last], pos, mid + 1, r);
+	}
+	return rt;
+}
+
+int query(int Lrt, int Rrt, int k, int l, int r) {
+	if (l == r) return l;
+	int mid = l + r >> 1;
+	int tmp = sum[ls[Rrt]] - sum[ls[Lrt]];
+	if (tmp >= k) return query(ls[Lrt], ls[Rrt], k, l, mid);
+	else return query(rs[Lrt], rs[Rrt], k - tmp, mid + 1, r);
 }
 
 int main(int argc, char const *argv[]) {
@@ -62,9 +92,20 @@ int main(int argc, char const *argv[]) {
     		Hash[i] = a[i];
     	}
     	sort(Hash + 1, Hash + 1 + n);
-    	len = unique(Hash + 1, Hash + 1 + n) - Hash;
+    	len = unique(Hash + 1, Hash + 1 + n) - Hash - 1;
     	tot = 0;
-
+    	root[0] = build(1, len);
+    	for (int i = 1; i <= n; i++) {
+    		int pos = lower_bound(Hash + 1, Hash + 1 + len, a[i]) - Hash;
+    		root[i] = update(root[i - 1], pos, 1, len);
+    	}
+    	while (q--) {
+    		int l, r, k;
+    		SIII(l, r, k);
+    		int ans = query(root[l - 1], root[r], k, 1, len);
+    		// lookln(ans);
+    		printf("%d\n", Hash[ans]);
+    	}
     }
 	return 0;
 }
